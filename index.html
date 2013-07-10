@@ -1,47 +1,92 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <title>Chord Diagram</title>
-    <script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
-    <style>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Общественный транспорт Москвы</title>
+<script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
+<style>
 
-      body {
-        font: 13px verdana;
-        background: #ffffff url('img/paper.png');
-      }
+/*      body {
+    font: 14px sans-serif;
+    background: #ffffff url('img/paper.png');
+  }*/
 
-      #circle circle {
-        fill: none;
-        stroke: White;
-        stroke-width: 1px;
-        pointer-events: all;
-        margin: 0 auto;
-      }
+  body {
+    background: #fcfcfa url('img/paper.png');
+    color: #333;
+    font: 14px sans-serif;
+    margin: 2em auto 4em auto;
+    position: relative;
+  }
 
-      #button new {
-        padding: 100px;
-      }
+  body > p, li > p {
+    line-height: 1.5em;
+  }
 
-/*      .group path {
-        fill-opacity: 1;
-      }*/
+  body > div {
+/*    width: 720px;
+    height: 720px;*/
+    margin: 0 auto;
+  }
 
-      path.chord {
-        stroke: Gray;
-        stroke-width: .15px;
-      }
+  button {
+    padding: 10px;
+  }
 
-      #circle:hover path.fade {
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
+  svg {
+    font: 14px sans-serif;
+  }
+
+  #chart {
+    width: 600px;
+    height: 600px;
+    /*margin: 0 auto;*/
+  }
+
+/*  .arc path {
+    stroke: #000;
+    stroke-width: .5px;
+  }*/
+
+  #controls {
+    margin-top: 20px;
+    width: 500px;
+    height: 50px;
+    text-align: center;
+  }
+
+  #chart chart {
+    pointer-events: all;
+    margin: 0 auto;
+  }
+
+/*  #button new {
+    padding: 100px;
+  }*/
+
+  .group path {
+    fill-opacity: 1;
+  }
+
+  path.chord {
+    stroke: none;
+    /*stroke-width: 5px;*/
+  }
+
+  #chart:hover .fade {
+    display: none;
+  }
+
+</style>
+</head>
+<body>
+  <div id="chart"></div>
+  <div id="controls">
     <button id="msk">Moscow</button>
     <button id="okrug">Okrug</button>
     <button id="clear">Clear</button>
-    <div id="circle" style="margin-left:auto;margin-right:auto;"></div>
-    <script type="text/javascript" src="js/vis.js"></script>
-  </body>
+    <button id="update">Update</button>
+  </div>
+  <script type="text/javascript" src="js/vis.js"></script>
+</body>
 </html>
