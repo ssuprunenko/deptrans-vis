@@ -6,17 +6,12 @@
 <script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
 <style>
 
-/*      body {
-    font: 14px sans-serif;
-    background: #ffffff url('img/paper.png');
-  }*/
-
   body {
     background: #fcfcfa url('img/paper.png');
     color: #333;
     font: 14px sans-serif;
     margin: 2em auto 4em auto;
-    position: relative;
+    /*position: relative;*/
   }
 
   body > p, li > p {
@@ -26,32 +21,39 @@
   body > div {
 /*    width: 720px;
     height: 720px;*/
-    margin: 0 auto;
+    /*margin: 20px;*/
+    /*float: left;*/
   }
 
   button {
     padding: 10px;
   }
 
-  svg {
-    font: 14px sans-serif;
+/*  svg {
+    font: 12px sans-serif;
+  }*/
+
+  #vis {
+    width: 900px;
+    height: 600px;
+    margin: 0 auto;
+  }
+
+  #title {
+    font: 18px sans-serif;
   }
 
   #chart {
-    width: 600px;
+    width: 550px;
     height: 600px;
-    /*margin: 0 auto;*/
+    margin: 0 auto;
   }
 
-/*  .arc path {
-    stroke: #000;
-    stroke-width: .5px;
-  }*/
-
   #controls {
-    margin-top: 20px;
-    width: 500px;
-    height: 50px;
+    margin: 25px;
+    margin-top: 100px;
+    width: 300px;
+    height: 300px;
     text-align: center;
   }
 
@@ -60,32 +62,50 @@
     margin: 0 auto;
   }
 
-/*  #button new {
-    padding: 100px;
-  }*/
-
-  .group path {
-    fill-opacity: 1;
+  .arc {
+    fill-opacity: .9;
   }
 
-  path.chord {
-    stroke: none;
-    /*stroke-width: 5px;*/
+  .chord {
+    fill-opacity: .7;
+  }
+
+  .label {
+    font: 14px sans;
+    stroke: Black;
+    stroke-width: .2px;
+    /*letter-spacing: 2.5px;*/
   }
 
   #chart:hover .fade {
-    display: none;
+    fill-opacity: .1;
   }
 
 </style>
 </head>
 <body>
-  <div id="chart"></div>
-  <div id="controls">
-    <button id="msk">Moscow</button>
-    <button id="okrug">Okrug</button>
-    <button id="clear">Clear</button>
-    <button id="update">Update</button>
+  <div id="vis">
+    <div id="controls" style="float:left">
+      <button id="msk">Moscow</button>
+      <!-- <button id="okrug">Okrug (12)</button> -->
+      <button id="clear">Clear</button>
+      <br><br>
+      <button id="sao">САО</button>
+      <br>
+      <button id="szao">СЗАО</button>
+      <button id="svao">СВАО</button>
+      <br>
+      <button id="zao">ЗАО</button>
+      <button id="cao">ЦАО</button>
+      <button id="vao">ВАО</button>
+      <br>
+      <button id="uzao">ЮЗАО</button>
+      <button id="uvao">ЮВАО</button>
+      <br>
+      <button id="uao">ЮАО</button>
+    </div><div id="chart" style="float:left">
+      <p id="title" align="center">Москва</p>
+    </div>
   </div>
   <script type="text/javascript" src="js/vis.js"></script>
 </body>
