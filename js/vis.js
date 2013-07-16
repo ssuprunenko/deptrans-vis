@@ -15,9 +15,9 @@ var last_chords = {};
 
 var fill = d3.scale.category20c();
 
-var width = 800,
+var width = 900,
     height = 600,
-    outerRadius = Math.min(width, height) * .42,
+    outerRadius = Math.min(width, height) * .4,
     innerRadius = outerRadius * .95,
     northAngle = 0  * Math.PI / 180;
 
@@ -45,12 +45,12 @@ var svg = d3.select("#chart")
     .attr("height", height)
   .append("svg:g")
     .attr("id", "chart")
-    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+    .attr("transform", "translate(" + width / 2 + "," + (height / 2 - 20) + ")");
 
-var textcircle = svg.append("svg:circle")
-  .attr("r", outerRadius*1.3)
-  .style("fill", "none")
-  .style("stroke", "black");
+// var textcircle = svg.append("svg:circle")
+//   .attr("r", outerRadius*1.3)
+//   .style("fill", "none")
+//   .style("stroke", "gray");
 
 var title = d3.select("#title")
       .text("Москва");

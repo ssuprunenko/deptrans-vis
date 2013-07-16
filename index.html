@@ -7,17 +7,16 @@
 <style>
 
   body {
-    background: #fcfcfa url('img/paper.png');
-    color: #333;
+    background: Black; /*url('img/paper.png');*/
+    color: White;
     /*font: 12px sans-serif;*/
     margin: 2em auto 4em auto;
-    word-wrap: break-word;
     /*position: relative;*/
   }
 
-  body > p, li > p {
+/*  body > p, li > p {
     line-height: 1.5em;
-  }
+  }*/
 
   body > div {
 /*    width: 720px;
@@ -35,23 +34,24 @@
   }*/
 
   #vis {
-    width: 900px;
-    height: 600px;
+    width: 1200px;
+    height: 650px;
     margin: 0 auto;
   }
 
   #title {
     font: 18px sans-serif;
+    font-weight: bold;
   }
 
   #chart {
-    width: 700px;
-    height: 700px;
+    width: 900px;
+    height: 600px;
     margin: 0 auto;
   }
 
   #controls {
-    /*margin: 25px;*/
+    margin: 15px;
     margin-top: 100px;
     /*width: 200px;*/
     /*height: 200px;*/
@@ -72,9 +72,10 @@
   }
 
   .label {
-    font: 13px sans;
-    stroke: Black;
-    stroke-width: .2px;
+    font: 14px sans;
+    fill: White;
+    stroke: White;
+    stroke-width: .5px;
     /*letter-spacing: 2.5px;*/
   }
 
@@ -104,7 +105,8 @@
       <button id="uvao">ЮВАО</button>
       <br>
       <button id="uao">ЮАО</button>
-    </div><div id="chart" style="float:left">
+    </div>
+    <div id="chart" style="float:left">
       <p id="title" align="center">Москва</p>
     </div>
   </div>
