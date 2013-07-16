@@ -1,31 +1,29 @@
-var okrugs = {0: "САО", 1: "СВАО", 2: "ВАО", 3: "ЮВАО", 4: "ЮАО",
-              5: "ЮЗАО", 6: "ЗАО", 7: "СЗАО", 8: "ЦАО"};
+var okrugs = {0: "ВАО", 1: "ЦАО", 2: "ЮВАО", 3: "ЮАО",
+              4: "ЮЗАО", 5: "ЗАО", 6: "СЗАО"};
 
 var data = [
-  [183, 29, 1, 2, 0, 1, 5, 36, 26],
-  [29, 156, 8, 2, 0, 0, 0, 0, 31],
-  [1, 8, 194, 36, 0, 0, 0, 0, 24],
-  [2, 2, 36, 194, 30, 2, 1, 1, 27],
-  [0, 0, 0, 30, 240, 49, 7, 0, 34],
-  [1, 0, 0, 2, 49, 184, 52, 0, 22],
-  [5, 0, 0, 1, 7, 52, 211, 12, 21],
-  [36, 0, 0, 1, 0, 0, 12, 160, 14],
-  [26, 31, 24, 27, 34, 22, 21, 14, 151],
+  [194, 24, 36, 0, 0, 0, 0],
+  [24, 151, 27, 34, 22, 21, 14],
+  [36, 27, 194, 30, 2, 1, 1],
+  [0, 34, 30, 240, 49, 7, 0],
+  [0, 22, 2, 49, 184, 52, 0],
+  [0, 21, 1, 7, 52, 211, 12],
+  [0, 14, 1, 0, 0, 12, 160],
   ];
 
 var last_chords = {};
 
 var fill = d3.scale.category20c();
 
-var width = 550,
-    height = 550,
-    outerRadius = Math.min(width, height) * .48,
-    innerRadius = outerRadius * .9,
+var width = 800,
+    height = 600,
+    outerRadius = Math.min(width, height) * .42,
+    innerRadius = outerRadius * .95,
     northAngle = 0  * Math.PI / 180;
 
 // Compute the chord layout
 var layout = d3.layout.chord()
-  .padding(.03)
+  .padding(.02)
   .sortSubgroups(d3.descending)
   .sortChords(d3.ascending);
 
@@ -47,7 +45,12 @@ var svg = d3.select("#chart")
     .attr("height", height)
   .append("svg:g")
     .attr("id", "chart")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+
+var textcircle = svg.append("svg:circle")
+  .attr("r", outerRadius*1.3)
+  .style("fill", "none")
+  .style("stroke", "black");
 
 var title = d3.select("#title")
       .text("Москва");
@@ -167,7 +170,11 @@ function render(myplace) {
         matrix = [],
         n = 0;
 
-    if (myplace != "Москва") {
+    if (myplace === "Москва") {
+      matrix = data;
+      places = okrugs;
+    }
+    else {
       file.forEach(function(d) {
         if (d.okrug === myplace) {
           matrix.push(d.routes);
@@ -176,71 +183,80 @@ function render(myplace) {
         }
       });
     }
-    else {
-      matrix = data;
-      places = okrugs;
-    }
 
     layout.matrix(matrix);
 
-    // if (myplace === "Москва") {
-      arcs = svg.append("svg:g")
-        .attr("class", "arc")
-        .selectAll("path")
-        .data(layout.groups)
-      .enter().append("svg:path")
-        .attr("id", function(d, i) {return "arc" + i;})
-        .on("mouseover", mouseover)
-        .style("fill", function(d) {return fill(d.index);})
-        .style("stroke", function(d) {return fill(d.index);})
-        .attr("d", arc);
-      // }
-      // else
-      // {
-      //   arcs = svg.select(".arc")
-      //   .attr("class", "arc")
-      //   .selectAll("path")
-      //   .data(layout.groups)
-      // // .enter().append("svg:path")
-      //   // .attr("id", function(d, i) {return "arc" + i;})
-      //   // .on("mouseover", mouseover)
-      //   // .style("fill", function(d) {return fill(d.index);})
-      //   // .style("stroke", function(d) {return fill(d.index);})
-      //   .transition()
-      //   .duration(700)
-      //   .delay(0)
-      //   .attrTween("d", arcTween(last_chords))
-      //   .style("visibility", "visible");
-      //   // .attr("d", arc);
-      // }
+    arcs = svg.append("svg:g")
+      .attr("class", "arc")
+      .selectAll("g")
+      .data(layout.groups)
+    .enter().append("svg:g")
+      .attr("id", function(d, i) {return "arc" + i;});
 
-    // d3.select(".arc")
-    //   .selectAll("title")
-    //   .text(function(d, i) {return districts[i];});
+    arcs.append("svg:path")
+      .on("mouseover", mouseover)
+      .style("fill", function(d) {return fill(d.index);})
+      .style("stroke", function(d) {return fill(d.index);})
+      .attr("d", arc);
+
     var arctitles = arcs.append("title")
       .text(function(d, i) {return places[i];});
 
-    labels = svg.append("svg:g")
+
+
+    arcs.append("svg:text")
       .attr("class", "label")
-      .selectAll("text")
-      .data(layout.groups)
-    .enter().append("svg:text")
-      .attr("dy", "20px")
-      .attr("text-anchor", "middle");
+      .attr("transform", function(d) {
+          var c = arc.centroid(d),
+              x = c[0],
+              y = c[1],
+              // pythagorean theorem for hypotenuse
+              h = Math.sqrt(x*x + y*y);
+          return "translate(" + (x/h * (outerRadius + 10)) +  ',' +
+             (y/h * (outerRadius + 10)) +  ")";
+      })
+      .attr("dy", ".35em")
+      .attr("text-anchor", function(d) {
+          return (d.endAngle + d.startAngle)/2 > Math.PI ?
+              "end" : "start";
+      })
+      .text(function(d, i) {return places[i];});
 
-    labelspath = labels.append("svg:textPath")
-      .attr("xlink:href", function(d, i) {return "#arc" + i;})
-      .text(function(d, i) {return places[i];})
-      .attr("startOffset", function(d) {
-        angle = d.startAngle + (d.endAngle - d.startAngle)/2;
-        angle = d.endAngle * 180 / Math.PI;
-        return ((angle > 100) & (angle < 270)) ? "71%" : "21%";
-      });
+    // arcs = svg.append("svg:g")
+    //   .attr("class", "arc")
+    //   .selectAll("path")
+    //   .data(layout.groups)
+    // .enter().append("svg:path")
+    //   .attr("id", function(d, i) {return "arc" + i;})
+    //   .on("mouseover", mouseover)
+    //   .style("fill", function(d) {return fill(d.index);})
+    //   .style("stroke", function(d) {return fill(d.index);})
+    //   .attr("d", arc);
 
-    // Remove the labels that don't fit
-    labels.filter(function(d, i) {
-      return arcs[0][i].getTotalLength() / 2 - 40 < this.getComputedTextLength(); })
-      .style("visibility", "hidden");
+    // var arctitles = arcs.append("title")
+    //   .text(function(d, i) {return places[i];});
+
+    // labels = svg.append("svg:g")
+    //   .attr("class", "label")
+    //   .selectAll("text")
+    //   .data(layout.groups)
+    // .enter().append("svg:text")
+    //   .attr("dy", "20px")
+    //   .attr("text-anchor", "middle");
+
+    // labelspath = labels.append("svg:textPath")
+    //   .attr("xlink:href", function(d, i) {return "#arc" + i;})
+    //   .text(function(d, i) {return places[i];})
+    //   .attr("startOffset", function(d) {
+    //     angle = d.startAngle + (d.endAngle - d.startAngle)/2;
+    //     angle = d.endAngle * 180 / Math.PI;
+    //     return ((angle > 100) & (angle < 270)) ? "71%" : "21%";
+    //   });
+
+    // // Remove the labels that don't fit
+    // labels.filter(function(d, i) {
+    //   return arcs[0][i].getTotalLength() / 2 - 32 < this.getComputedTextLength(); })
+    //   .style("visibility", "hidden");
 
     // Add the chords
     chordlines = svg.append("svg:g")
