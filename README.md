@@ -1,6 +1,6 @@
 deptrans-vis
 ============
-Demo: ssuprunenko.github.io
+Demo: http://ssuprunenko.github.io
 
 Наземный городской транспорт Москвы
 

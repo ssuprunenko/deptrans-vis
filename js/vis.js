@@ -1,3 +1,5 @@
+var Paired = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2","#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
+
 var okrugs = {0: "ВАО", 1: "ЦАО", 2: "ЮВАО", 3: "ЮАО",
               4: "ЮЗАО", 5: "ЗАО", 6: "СЗАО"};
 
@@ -195,8 +197,8 @@ function render(myplace) {
 
     arcs.append("svg:path")
       .on("mouseover", mouseover)
-      .style("fill", function(d) {return fill(d.index);})
-      .style("stroke", function(d) {return fill(d.index);})
+      .style("fill", function(d) {return Paired[d.index];})
+      .style("stroke", function(d) {return Paired[d.index];})
       .attr("d", arc);
 
     var arctitles = arcs.append("title")
@@ -229,8 +231,8 @@ function render(myplace) {
     // .enter().append("svg:path")
     //   .attr("id", function(d, i) {return "arc" + i;})
     //   .on("mouseover", mouseover)
-    //   .style("fill", function(d) {return fill(d.index);})
-    //   .style("stroke", function(d) {return fill(d.index);})
+    //   .style("fill", function(d) {return Paired[d.index];})
+    //   .style("stroke", function(d) {return Paired[d.index];})
     //   .attr("d", arc);
 
     // var arctitles = arcs.append("title")
@@ -265,7 +267,7 @@ function render(myplace) {
       .data(layout.chords)
     .enter().append("svg:path")
       .attr("id", function(d, i) {return "chord" + i;})
-      .style("fill", function(d) {return fill(d.target.index);})
+      .style("fill", function(d) {return Paired[d.target.index];})
       .attr("d", chordl);
 
     // chordlines
