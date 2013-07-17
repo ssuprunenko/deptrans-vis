@@ -1,4 +1,4 @@
-var Paired = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2","#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
+var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2","#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
 
 var okrugs = {0: "ВАО", 1: "ЦАО", 2: "ЮВАО", 3: "ЮАО",
               4: "ЮЗАО", 5: "ЗАО", 6: "СЗАО"};
@@ -48,6 +48,9 @@ var svg = d3.select("#chart")
   .append("svg:g")
     .attr("id", "chart")
     .attr("transform", "translate(" + width / 2 + "," + (height / 2 - 20) + ")");
+
+// Draw the map
+maprender();
 
 // var textcircle = svg.append("svg:circle")
 //   .attr("r", outerRadius*1.3)
@@ -197,8 +200,8 @@ function render(myplace) {
 
     arcs.append("svg:path")
       .on("mouseover", mouseover)
-      .style("fill", function(d) {return Paired[d.index];})
-      .style("stroke", function(d) {return Paired[d.index];})
+      .style("fill", function(d) {return Colors[d.index];})
+      .style("stroke", function(d) {return Colors[d.index];})
       .attr("d", arc);
 
     var arctitles = arcs.append("title")
@@ -231,8 +234,8 @@ function render(myplace) {
     // .enter().append("svg:path")
     //   .attr("id", function(d, i) {return "arc" + i;})
     //   .on("mouseover", mouseover)
-    //   .style("fill", function(d) {return Paired[d.index];})
-    //   .style("stroke", function(d) {return Paired[d.index];})
+    //   .style("fill", function(d) {return Colors[d.index];})
+    //   .style("stroke", function(d) {return Colors[d.index];})
     //   .attr("d", arc);
 
     // var arctitles = arcs.append("title")
@@ -267,7 +270,7 @@ function render(myplace) {
       .data(layout.chords)
     .enter().append("svg:path")
       .attr("id", function(d, i) {return "chord" + i;})
-      .style("fill", function(d) {return Paired[d.target.index];})
+      .style("fill", function(d) {return Colors[d.target.index];})
       .attr("d", chordl);
 
     // chordlines
@@ -294,6 +297,65 @@ function mouseover(d, i) {
           && p.target.index != i;
     });
 };
+
+
+
+function maprender() {
+  var w = 300,
+      h = 300;
+
+  var projection = d3.geo.albers()
+      .center([36.803101, 55.142201])
+      .rotate(0,0)
+      .parallels([50, 60])
+      .scale(4000)
+      .translate([w/2 + 50, 2*h + 50]);
+
+  var path = d3.geo.path()
+      .projection(projection);
+
+  var svg = d3.select("#map").append("svg")
+      .attr("width", width)
+      .attr("height", height);
+      // .append("svg:g")
+      // .attr("id", "map");
+      // .attr("transform", "rotate(50)");
+
+  d3.json("data/moscowmap.json", function(error, msk) {
+
+    // Okrugs
+    var okrugsmap = svg.append("svg:g")
+        .attr("class", "okrug")
+        .selectAll("path")
+        .data(topojson.feature(msk, msk.objects.okrugs).features)
+      .enter().append("svg:path")
+        .style("fill", function(d, i) {return Colors[i];})
+        .attr("d", path)
+        .on("click", function(d) {render(d.properties.NAME);})
+        .on("mouseover", function() {d3.select(this).style("stroke", "White").style("stroke-width", "2px");})
+        .on("mouseout", function() {d3.select(this).style("stroke", "Black").style("stroke-width", ".5px");});
+
+    var okrugstitle = okrugsmap.append("title")
+        .text(function(d) {return d.properties.NAME;});
+
+    // okrugsmap.filter(function(d) {return d.properties.LVL == 8;}).remove();
+
+
+    // Districts
+    // var districtsmap = svg.append("svg:g")
+    //     .attr("class", "district")
+    //     .selectAll("path")
+    //     .data(topojson.feature(msk, msk.objects.districts).features)
+    //   .enter().append("svg:path")
+    //     .attr("d", path);
+
+    // var districtstitle = districtsmap.append("title")
+    //     .text(function(d) {return d.properties.NAME;});
+
+    // districtsmap.filter(function(d) {return d.properties.LVL == 5;}).remove();
+
+  });
+}
 
 
 function arcTween(prev_chord) {

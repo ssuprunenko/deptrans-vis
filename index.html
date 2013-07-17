@@ -4,12 +4,13 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <title>Общественный транспорт Москвы</title>
 <script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/libs/topojson.v1.min.js" charset="utf-8"></script>
 <style>
 
   body {
-    background: Black; /*url('img/paper.png');*/
-    color: White;
-    /*font: 12px sans-serif;*/
+    background: #272822; /*url('img/paper.png');*/
+    color: #F8F8F2;
+    font: 12px sans-serif;
     margin: 2em auto 4em auto;
     /*position: relative;*/
   }
@@ -50,6 +51,11 @@
     margin: 0 auto;
   }
 
+  #map {
+    width: 300px;
+    height: 300px;
+  }
+
   #controls {
     margin: 15px;
     margin-top: 100px;
@@ -63,6 +69,12 @@
     /*margin: 0 auto;*/
   }
 
+  .okrug {
+    stroke: Black;
+    stroke-width: .5px;
+    fill-opacity: .9;
+  }
+
   .arc {
     fill-opacity: 1;
   }
@@ -72,10 +84,11 @@
   }
 
   .label {
-    font: 14px sans;
-    fill: White;
-    stroke: White;
-    stroke-width: .35px;
+    font: 14px Verdana, Helvetica, sans-serif;
+    fill: #F8F8F2;
+    /*font-weight: 500;*/
+    stroke: #F8F8F2;
+    stroke-width: .25px;
     /*letter-spacing: 2.5px;*/
   }
 
@@ -87,9 +100,8 @@
 </head>
 <body>
   <div id="vis">
-    <div id="controls" style="float:left">
+    <!-- <div id="controls" style="float:left">
       <button id="msk">Moscow</button>
-      <!-- <button id="okrug">Okrug (12)</button> -->
       <button id="clear">Clear</button>
       <br><br>
       <button id="sao">САО</button>
@@ -105,9 +117,10 @@
       <button id="uvao">ЮВАО</button>
       <br>
       <button id="uao">ЮАО</button>
-    </div>
+    </div> -->
+    <div id="map" style="float:left"></div>
     <div id="chart" style="float:left">
-      <p id="title" align="center">Москва</p>
+      <h1 id="title" align="center">Москва</h1>
     </div>
   </div>
   <script type="text/javascript" src="js/vis.js"></script>

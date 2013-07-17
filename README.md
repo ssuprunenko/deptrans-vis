@@ -9,4 +9,4 @@ Demo: http://ssuprunenko.github.io
 Использовалась скорректированная версия http://gis-lab.info/data/mos.ru/752_norm.7z
 
 
-tools: d3.js, pandas
+tools: d3.js, topojson.js, pandas
