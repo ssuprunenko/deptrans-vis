@@ -301,27 +301,27 @@ function mouseover(d, i) {
 
 
 function maprender() {
-  var w = 300,
-      h = 300;
-
-  var projection = d3.geo.albers()
-      .center([36.803101, 55.142201])
-      .rotate(0,0)
-      .parallels([50, 60])
-      .scale(4000)
-      .translate([w/2 + 50, 2*h + 50]);
-
-  var path = d3.geo.path()
-      .projection(projection);
-
-  var svg = d3.select("#map").append("svg")
-      .attr("width", width)
-      .attr("height", height);
       // .append("svg:g")
       // .attr("id", "map");
       // .attr("transform", "rotate(50)");
 
   d3.json("data/moscowmap.json", function(error, msk) {
+
+      var width = 300,
+          height = 300;
+
+      // var center = d3.geo.centroid(msk.objects.okrugs);
+      var scale  = 2200;
+      var offset = [-80, 500];
+      var projection = d3.geo.mercator().scale(scale).center([37,55])
+          .translate(offset);
+
+      var path = d3.geo.path()
+          .projection(projection);
+
+      var svg = d3.select("#map").append("svg")
+          .attr("width", width)
+          .attr("height", height);
 
     // Okrugs
     var okrugsmap = svg.append("svg:g")
