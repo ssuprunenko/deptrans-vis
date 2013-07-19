@@ -214,7 +214,7 @@ function render(myplace) {
 
     // Compute the chord layout
     var layout = d3.layout.chord()
-      .padding(.0)
+      .padding(.03)
       .sortSubgroups(d3.descending)
       .sortChords(d3.ascending)
       .matrix(matrix);
@@ -351,7 +351,7 @@ function update(myplace) {
 
   // Compute the chord layout
   var layout = d3.layout.chord()
-    .padding(.0)
+    .padding(.03)
     .sortSubgroups(d3.descending)
     .sortChords(d3.ascending)
     .matrix(matrix);
@@ -370,12 +370,13 @@ function update(myplace) {
 
     arcs.select("path")
       .transition()
-      .duration(700)
-      .delay(0)
+      .duration(750)
+      .delay(20)
       .attrTween("d", arcTween(last_chord));
 
     arcs.select("path")
       .on("mouseover", mouseover);
+      // .style("stroke-width", function(d) {return d.value == 0? "0":"2";});
 
     var arctitles = arcs.select("title")
         .text(function(d, i) {return d.value != 0 ? places[i] : "";});
@@ -506,16 +507,7 @@ function arcTween(last_chord) {
     }
   }
 }
-// function arcTween(prev_chord) {
-//   return function(d,i) {
-//     var j = d3.interpolate(prev_chord.groups()[i], d);
 
-//     return function(t) {
-//       console.log(arc(j(t));
-//       return arc(j(t));
-//     }
-//   }
-// }
 function chordTween(chord) {
   return function(d,i) {
     var i = d3.interpolate(chord.chords()[i], d);
