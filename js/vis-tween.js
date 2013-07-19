@@ -418,3 +418,42 @@ function clear_label() {
   //     // .attr("opacity", 0.1)
   //     .remove();
 };
+
+
+
+
+// arcs = svg.append("svg:g")
+    //   .attr("class", "arc")
+    //   .selectAll("path")
+    //   .data(layout.groups)
+    // .enter().append("svg:path")
+    //   .attr("id", function(d, i) {return "arc" + i;})
+    //   .on("mouseover", mouseover)
+    //   .style("fill", function(d) {return Colors[d.index];})
+    //   .style("stroke", function(d) {return Colors[d.index];})
+    //   .attr("d", arc);
+
+    // var arctitles = arcs.append("title")
+    //   .text(function(d, i) {return places[i];});
+
+    // labels = svg.append("svg:g")
+    //   .attr("class", "label")
+    //   .selectAll("text")
+    //   .data(layout.groups)
+    // .enter().append("svg:text")
+    //   .attr("dy", "20px")
+    //   .attr("text-anchor", "middle");
+
+    // labelspath = labels.append("svg:textPath")
+    //   .attr("xlink:href", function(d, i) {return "#arc" + i;})
+    //   .text(function(d, i) {return places[i];})
+    //   .attr("startOffset", function(d) {
+    //     angle = d.startAngle + (d.endAngle - d.startAngle)/2;
+    //     angle = d.endAngle * 180 / Math.PI;
+    //     return ((angle > 100) & (angle < 270)) ? "71%" : "21%";
+    //   });
+
+    // // Remove the labels that don't fit
+    // labels.filter(function(d, i) {
+    //   return arcs[0][i].getTotalLength() / 2 - 32 < this.getComputedTextLength(); })
+    //   .style("visibility", "hidden");

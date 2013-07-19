@@ -6,7 +6,6 @@
 <script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
 <script type="text/javascript" src="js/libs/topojson.v1.min.js" charset="utf-8"></script>
 <style>
-
   body {
     background: #272822; /*url('img/paper.png');*/
     color: #F8F8F2;
@@ -35,7 +34,7 @@
   }*/
 
   #vis {
-    width: 1200px;
+    width: 1100px;
     height: 650px;
     margin: 0 auto;
   }
@@ -52,8 +51,10 @@
   }
 
   #map {
-    width: 300px;
+    width: 260px;
     height: 300px;
+    margin-right: -70px;
+    margin-left: 10px;
   }
 
   #controls {
@@ -88,41 +89,24 @@
     fill: #F8F8F2;
     /*font-weight: 500;*/
     stroke: #F8F8F2;
-    stroke-width: .25px;
+    stroke-width: .15px;
     /*letter-spacing: 2.5px;*/
   }
 
   #chart:hover .fade {
-    fill-opacity: .1;
+    opacity: .1;
   }
 
 </style>
 </head>
 <body>
   <div id="vis">
-    <!-- <div id="controls" style="float:left">
-      <button id="msk">Moscow</button>
-      <button id="clear">Clear</button>
-      <br><br>
-      <button id="sao">САО</button>
-      <br>
-      <button id="szao">СЗАО</button>
-      <button id="svao">СВАО</button>
-      <br>
-      <button id="zao">ЗАО</button>
-      <button id="cao">ЦАО</button>
-      <button id="vao">ВАО</button>
-      <br>
-      <button id="uzao">ЮЗАО</button>
-      <button id="uvao">ЮВАО</button>
-      <br>
-      <button id="uao">ЮАО</button>
-    </div> -->
     <div id="map" style="float:left"></div>
     <div id="chart" style="float:left">
       <h1 id="title" align="center">Москва</h1>
     </div>
   </div>
   <script type="text/javascript" src="js/vis.js"></script>
+  <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>
