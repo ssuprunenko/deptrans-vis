@@ -43,7 +43,7 @@ var last_chord = {},
 
 var fill = d3.scale.category20c();
 
-var width = 900,
+var width = 750,
     height = 600,
     outerRadius = Math.min(width, height) * .38,
     innerRadius = outerRadius * .91,
@@ -72,17 +72,13 @@ var svg = d3.select("#chart")
 // Draw the map
 maprender();
 
-// var textcircle = svg.append("svg:circle")
-//   .attr("r", outerRadius*1.3)
-//   .style("fill", "none")
-//   .style("stroke", "gray");
-
 var title = d3.select("#title")
       .text("Москва");
 
 var arcs,
     chordlines,
-    labels;
+    labels,
+    textcircle;
 
 render("Москва");
 
@@ -259,42 +255,6 @@ function render(myplace) {
       })
       .text(function(d, i) {return d.value != 0 ? places[i] : "";});
 
-    // arcs = svg.append("svg:g")
-    //   .attr("class", "arc")
-    //   .selectAll("path")
-    //   .data(layout.groups)
-    // .enter().append("svg:path")
-    //   .attr("id", function(d, i) {return "arc" + i;})
-    //   .on("mouseover", mouseover)
-    //   .style("fill", function(d) {return Colors[d.index];})
-    //   .style("stroke", function(d) {return Colors[d.index];})
-    //   .attr("d", arc);
-
-    // var arctitles = arcs.append("title")
-    //   .text(function(d, i) {return places[i];});
-
-    // labels = svg.append("svg:g")
-    //   .attr("class", "label")
-    //   .selectAll("text")
-    //   .data(layout.groups)
-    // .enter().append("svg:text")
-    //   .attr("dy", "20px")
-    //   .attr("text-anchor", "middle");
-
-    // labelspath = labels.append("svg:textPath")
-    //   .attr("xlink:href", function(d, i) {return "#arc" + i;})
-    //   .text(function(d, i) {return places[i];})
-    //   .attr("startOffset", function(d) {
-    //     angle = d.startAngle + (d.endAngle - d.startAngle)/2;
-    //     angle = d.endAngle * 180 / Math.PI;
-    //     return ((angle > 100) & (angle < 270)) ? "71%" : "21%";
-    //   });
-
-    // // Remove the labels that don't fit
-    // labels.filter(function(d, i) {
-    //   return arcs[0][i].getTotalLength() / 2 - 32 < this.getComputedTextLength(); })
-    //   .style("visibility", "hidden");
-
     // Add the chords
     chordlines = svg.append("svg:g")
       .attr("class", "chord")
@@ -305,18 +265,16 @@ function render(myplace) {
       .style("fill", function(d) {return Colors[d.source.index];})
       .attr("d", chordl);
 
-    // chordlines
-    //   .transition()
-    //   .delay(0)
-    //   .duration(350)
-    //   .attr("d", chordl);
-
     // Add an elaborate mouseover title for each chord.
     chordlines.append("title").text(function(d) {
       return places[d.source.index]
         + " ↔ " + places[d.target.index]
         + ": " + d.source.value;
     });
+
+    textcircle = svg.append("svg:circle")
+      .attr("class", "circle")
+      .attr("r", innerRadius);
 
     last_chord = layout;
     last_place = myplace;
@@ -363,6 +321,8 @@ function update(myplace) {
     arcs.select("text")
       .remove();
 
+    textcircle.remove();
+
     // update arcs
     arcs = svg.select(".arc")
       .selectAll("g")
@@ -376,14 +336,13 @@ function update(myplace) {
 
     arcs.select("path")
       .on("mouseover", mouseover);
-      // .style("stroke-width", function(d) {return d.value == 0? "0":"2";});
 
     var arctitles = arcs.select("title")
         .text(function(d, i) {return d.value != 0 ? places[i] : "";});
 
 
     // update labels
-    arcs.append("svg:text")
+    labels = arcs.append("svg:text")
       .attr("class", "label")
       .attr("transform", function(d) {
           var c = arc.centroid(d),
@@ -392,21 +351,33 @@ function update(myplace) {
               // pythagorean theorem for hypotenuse
               h = Math.sqrt(x*x + y*y);
           return "translate(" + (x/h * (outerRadius + 10)) +  ',' +
-             (y/h * (outerRadius + 10)) +  ")";
+             (y/h * (outerRadius + 17)) +  ")";
       })
-      .attr("dy", ".35em")
       .attr("text-anchor", function(d) {
           return (d.endAngle + d.startAngle)/2 > Math.PI ?
               "end" : "start";
+      });
+
+    labels.text(function(d, i) {
+        if (d.value != 0) {
+          var name = places[i].split(' ');
+          return name[0];
+          }
+        else return "";
+      });
+
+    labels.append('tspan')
+      .text(function(d, i) {
+        if (d.value != 0) {
+          var name = places[i].split(' ');
+          if (name.length === 2) {
+            return name[1];
+          }
+        }
+        else return "";
       })
-      // .style("stroke-width", "0px")
-      // // .style("fill-opacity", "0")
-      // .transition()
-      // .delay(250)
-      .text(function(d, i) {return d.value != 0 ? places[i] : "";});
-      // .style("fill-opacity", "1")
-      // .style("stroke-width", ".25px")
-      // .attr("visibility", "visible");
+      .attr('x', '0em')
+      .attr('y', '1.1em');
 
 
     // update chords
@@ -434,6 +405,10 @@ function update(myplace) {
         + ": " + d.source.value;
     });
 
+    textcircle = svg.append("svg:circle")
+      .attr("class", "circle")
+      .attr("r", innerRadius);
+
     // Remember latest values
     last_chord = layout;
     last_place = myplace;
@@ -448,12 +423,12 @@ function maprender() {
 
   d3.json("data/moscowmap.json", function(error, msk) {
 
-      var width = 260,
+      var width = 270,
           height = 300;
 
       // var center = d3.geo.centroid(msk.objects.okrugs);
       var scale  = 2200;
-      var offset = [-120, 500];
+      var offset = [-110, 500];
       var projection = d3.geo.mercator().scale(scale).center([37,55])
           .translate(offset);
 
