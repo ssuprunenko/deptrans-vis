@@ -43,21 +43,35 @@ var last_chord = {},
 
 var fill = d3.scale.category20c();
 
-var width = 750,
+var width = 760,
     height = 600,
     outerRadius = Math.min(width, height) * .38,
     innerRadius = outerRadius * .91,
     northAngle = 0  * Math.PI / 180;
 
 var arc = d3.svg.arc()
-    .startAngle(function(d) {return d.startAngle - northAngle})
-    .endAngle(function(d) {return d.endAngle - northAngle})
+    .startAngle(function(d,i) {
+      if (d.value != 0)
+        return d.startAngle - northAngle + 0.005;
+      else
+        return 2*Math.PI;
+    })
+    .endAngle(function(d,i) {
+      if ((d.value != 0) & (i != 8)) {
+        console.log(i);
+        return d.endAngle - northAngle - 0.005;
+      }
+      else if (i === 8)
+        return 2*Math.PI - 0.05;
+      else
+        return 2*Math.PI;
+    })
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
 var chordl = d3.svg.chord()
-    .startAngle(function(d) { return d.startAngle - northAngle})
-    .endAngle(function(d) { return d.endAngle - northAngle})
+    .startAngle(function(d) {return d.startAngle - northAngle})
+    .endAngle(function(d) {return d.endAngle - northAngle})
     .radius(innerRadius);
 
 
@@ -114,64 +128,6 @@ d3.select("#clear").on("click", function() {
 });
 
 
-// d3.select("#okrug").on("click", function() {
-//   d3.json("data/matrix.json", function(file) {
-//     var places = {},
-//         matrix = [],
-//         n = 0;
-
-//     file.forEach(function(d) {
-//       if (d.okrug === "ЮЗАО") {
-//         matrix.push(d.routes);
-//         places[n] = d.district;
-//         n++;
-//       }
-//     });
-
-//     title.text("ЮЗАО");
-
-//     svg = render(matrix, places);
-//   });
-// });
-
-
-// d3.select("#sao").on("click", function() {
-//   render("САО");
-// });
-
-// d3.select("#svao").on("click", function() {
-//   render("СВАО");
-// });
-
-// d3.select("#vao").on("click", function() {
-//   render("ВАО");
-// });
-
-// d3.select("#uvao").on("click", function() {
-//   render("ЮВАО");
-// });
-
-// d3.select("#uao").on("click", function() {
-//   render("ЮАО");
-// });
-
-// d3.select("#uzao").on("click", function() {
-//   render("ЮЗАО");
-// });
-
-// d3.select("#zao").on("click", function() {
-//   render("ЗАО");
-// });
-
-// d3.select("#szao").on("click", function() {
-//   render("СЗАО");
-// });
-
-// d3.select("#cao").on("click", function() {
-//   render("ЦАО");
-// });
-
-
 /* Functions */
 function render(myplace) {
   title.text(myplace);
@@ -181,28 +137,27 @@ function render(myplace) {
 
   svg.select(".arc")
     .remove();
-    // .style("visibility", "hidden");
 
   svg.select(".label")
     .remove();
 
   // d3.json("data/matrix.json", function(file) {
     var places = {},
-        lines = {},
+        // lines = {},
         matrix = [],
         n = 0;
 
     if (myplace === "Москва") {
       matrix = data;
       places = okrugs;
-      lines = msk_colors;
+      // lines = msk_colors;
     }
     else {
       file.forEach(function(d) {
         if (d.okrug === myplace) {
           matrix.push(d.routes);
           places[n] = d.district;
-          lines[n] = d.metro;
+          // lines[n] = d.metro;
           n++;
         }
       });
@@ -210,8 +165,8 @@ function render(myplace) {
 
     // Compute the chord layout
     var layout = d3.layout.chord()
-      .padding(.03)
-      .sortSubgroups(d3.descending)
+      .padding(.05)
+      .sortSubgroups(d3.ascending)
       .sortChords(d3.ascending)
       .matrix(matrix);
 
@@ -294,7 +249,7 @@ function update(myplace) {
 
   // d3.json("data/matrix.json", function(file) {
   var places = {},
-      lines = {},
+      // lines = {},
       matrix = [],
       n = 0;
 
@@ -302,14 +257,14 @@ function update(myplace) {
     if (d.okrug === myplace) {
       matrix.push(d.routes);
       places[n] = d.district;
-      lines[n] = d.metro;
+      // lines[n] = d.metro;
       n++;
     }
   });
 
   // Compute the chord layout
   var layout = d3.layout.chord()
-    .padding(.03)
+    .padding(.0)
     .sortSubgroups(d3.descending)
     .sortChords(d3.ascending)
     .matrix(matrix);
@@ -455,21 +410,6 @@ function maprender() {
         .text(function(d) {return d.properties.NAME;});
 
     // okrugsmap.filter(function(d) {return d.properties.LVL == 8;}).remove();
-
-
-    // Districts
-    // var districtsmap = svg.append("svg:g")
-    //     .attr("class", "district")
-    //     .selectAll("path")
-    //     .data(topojson.feature(msk, msk.objects.districts).features)
-    //   .enter().append("svg:path")
-    //     .attr("d", path);
-
-    // var districtstitle = districtsmap.append("title")
-    //     .text(function(d) {return d.properties.NAME;});
-
-    // districtsmap.filter(function(d) {return d.properties.LVL == 5;}).remove();
-
   });
 }
 

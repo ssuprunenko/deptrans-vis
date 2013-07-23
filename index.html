@@ -7,31 +7,18 @@
 <script type="text/javascript" src="js/libs/topojson.v1.min.js" charset="utf-8"></script>
 <style>
   body {
-    background: #272822; /*url('img/paper.png');*/
+    background: #272822;
     color: #F8F8F2;
     font: 12px sans-serif;
     margin: 2em auto 4em auto;
-    /*position: relative;*/
   }
 
-/*  body > p, li > p {
-    line-height: 1.5em;
-  }*/
-
   body > div {
-/*    width: 720px;
-    height: 720px;*/
-    /*margin: 20px;*/
-    /*float: left;*/
   }
 
   button {
     padding: 10px;
   }
-
-/*  svg {
-    font: 12px sans-serif;
-  }*/
 
   #vis {
     width: 1024px;
@@ -48,21 +35,18 @@
     width: 750px;
     height: 600px;
     margin: 0 auto;
+    overflow: visible;
   }
 
   #map {
     width: 270px;
     height: 300px;
-    /*margin-right: 0 auto;*/
-    /*margin-left: 10px;*/
     z-index: 100;
   }
 
   #controls {
     margin: 15px;
     margin-top: 100px;
-    /*width: 200px;*/
-    /*height: 200px;*/
     text-align: center;
   }
 
@@ -85,8 +69,6 @@
 
   .arc {
     fill-opacity: 1;
-    /*stroke: #272822;*/
-    /*stroke-width: 7px;*/
   }
 
   .chord {
@@ -115,6 +97,6 @@
       <h1 id="title" align="center">Москва</h1>
     </div>
   </div>
-  <script type="text/javascript" src="js/vis.js"></script>
+  <script type="text/javascript" src="js/vis.min.js"></script>
 </body>
 </html>
