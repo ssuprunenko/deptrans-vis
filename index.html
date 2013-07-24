@@ -3,22 +3,35 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <title>Общественный транспорт Москвы</title>
-<script type="text/javascript" src="js/libs/d3.min.js" charset="utf-8"></script>
-<script type="text/javascript" src="js/libs/topojson.v1.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="js/libs/lib.js" charset="utf-8"></script>
 <style>
   body {
-    background: #272822;
-    color: #F8F8F2;
+    background: #f9e8d6;
+    background: #272822; /*url('img/paper.png');*/
+    color: #f9e8d6;
     font: 12px sans-serif;
     margin: 2em auto 4em auto;
+    /*position: relative;*/
   }
 
+/*  body > p, li > p {
+    line-height: 1.5em;
+  }*/
+
   body > div {
+/*    width: 720px;
+    height: 720px;*/
+    /*margin: 20px;*/
+    /*float: left;*/
   }
 
   button {
     padding: 10px;
   }
+
+/*  svg {
+    font: 12px sans-serif;
+  }*/
 
   #vis {
     width: 1024px;
@@ -41,12 +54,16 @@
   #map {
     width: 270px;
     height: 300px;
+    /*margin-right: 0 auto;*/
+    /*margin-left: 10px;*/
     z-index: 100;
   }
 
   #controls {
     margin: 15px;
     margin-top: 100px;
+    /*width: 200px;*/
+    /*height: 200px;*/
     text-align: center;
   }
 
@@ -69,18 +86,20 @@
 
   .arc {
     fill-opacity: 1;
+    /*stroke: #f9e8d6;*/
+    /*stroke-width: .5px;*/
   }
 
   .chord {
     fill-opacity: .8;
-    stroke: #272822;
-    stroke-width: .5px;
+    /*stroke: #f9e8d6;*/
+    /*stroke-width: .25px;*/
   }
 
   .label {
     font: 14px Verdana, Helvetica, sans-serif;
-    fill: #F8F8F2;
-    stroke: #F8F8F2;
+    fill: #f9e8d6;
+    stroke: #f9e8d6;
     stroke-width: .15px;
   }
 
@@ -97,6 +116,7 @@
       <h1 id="title" align="center">Москва</h1>
     </div>
   </div>
-  <script type="text/javascript" src="js/vis.min.js"></script>
+  <script type="text/javascript" src="js/vis.js"></script>
+  <!--script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script-->
 </body>
 </html>

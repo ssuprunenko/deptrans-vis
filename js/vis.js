@@ -4,12 +4,36 @@
 //               "#CB181D", "#1B7837", "#2166AC", "#92C5DE", "#FC8D62",
 //               "#FC4E2A", "#88419D", "#FECC5C", "#BABABA", "#B8E186",
 //               "#80CDC1", "#92C5DE", "#ABD9E9"];
+/* Colors
+ * background/antiquewhite: #f9e8d6
+ * orange/coral:            #f58055
+ * pink/tomato:             #ef6155
+ * green-brown/
+ *  palegoldenrod:          #e5d99f
+ * sky/lightsteelblue:      #afc9ca
+ * blue/cadetblue:          #6f9fb6
+ * green/darkkhaki:         #c0bd52
+ * gray/silver:             #cac4b8
+ * dimgray:                 #776670
+ * black:                   #242021
+ *
+ */
+// var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf",
+//               "#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2",
+//               "#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
 
-var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf","#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2",
+// Moto colors
+// var Colors = ["#ef6155", "#f58055", "#e5d99f", "#afc9ca",
+//               "#6f9fb6", "#c0bd52", "#cac4b8", "#776670"];
+
+// // Spectral colors
+var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf",
+              "#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2",
               "#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
 
-var okrugs = {0: "СВАО", 1: "ВАО", 2: "ЦАО", 3: "ЮВАО", 4: "ЮАО", 5: "ЮЗАО", 6: "ЗАО", 7: "СЗАО", 8: "САО",
-             17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: ""};
+var okrugs = {0: "СВАО", 1: "ВАО", 2: "ЦАО", 3: "ЮВАО", 4: "ЮАО", 5: "ЮЗАО",
+              6: "ЗАО", 7: "СЗАО", 8: "САО"};
+             // 17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: ""};
 
 var msk_colors = {0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 17:17};
 
@@ -41,37 +65,30 @@ var data = [
 var last_chord = {},
     last_place;
 
-var fill = d3.scale.category20c();
+var mypadding = 0.075;
+
+// var fill = d3.scale.category20c();
 
 var width = 760,
     height = 600,
     outerRadius = Math.min(width, height) * .38,
     innerRadius = outerRadius * .91,
-    northAngle = 0  * Math.PI / 180;
+    northAngle = 10  * Math.PI / 180;
 
+var endAngle = 2*Math.PI - mypadding;
 var arc = d3.svg.arc()
-    .startAngle(function(d,i) {
-      if (d.value != 0)
-        return d.startAngle - northAngle + 0.005;
-      else
-        return 2*Math.PI;
+    .startAngle(function(d) {
+      return d.startAngle < endAngle ? d.startAngle:endAngle;
     })
-    .endAngle(function(d,i) {
-      if ((d.value != 0) & (i != 8)) {
-        console.log(i);
-        return d.endAngle - northAngle - 0.005;
-      }
-      else if (i === 8)
-        return 2*Math.PI - 0.05;
-      else
-        return 2*Math.PI;
+    .endAngle(function(d) {
+      return d.endAngle <= endAngle ? d.endAngle:endAngle;
     })
     .innerRadius(innerRadius)
     .outerRadius(outerRadius);
 
 var chordl = d3.svg.chord()
-    .startAngle(function(d) {return d.startAngle - northAngle})
-    .endAngle(function(d) {return d.endAngle - northAngle})
+    // .startAngle(function(d) {return d.startAngle - northAngle})
+    // .endAngle(function(d) {return d.endAngle - northAngle})
     .radius(innerRadius);
 
 
@@ -165,9 +182,9 @@ function render(myplace) {
 
     // Compute the chord layout
     var layout = d3.layout.chord()
-      .padding(.05)
-      .sortSubgroups(d3.ascending)
-      .sortChords(d3.ascending)
+      .padding(mypadding)
+      .sortSubgroups(d3.descending)
+      // .sortChords(d3.ascending)
       .matrix(matrix);
 
     arcs = svg.append("svg:g")
@@ -189,7 +206,7 @@ function render(myplace) {
     // })
     // .attr("visibility", "hidden");
 
-    var arctitles = arcs.append("title")
+    arcs.append("title")
       .text(function(d, i) {return d.value != 0 ? places[i] : "";});
 
     arcs.append("svg:text")
@@ -264,9 +281,9 @@ function update(myplace) {
 
   // Compute the chord layout
   var layout = d3.layout.chord()
-    .padding(.0)
+    .padding(mypadding)
     .sortSubgroups(d3.descending)
-    .sortChords(d3.ascending)
+    // .sortChords(d3.ascending)
     .matrix(matrix);
 
   if (last_place != myplace) {
@@ -284,6 +301,7 @@ function update(myplace) {
       .data(layout.groups);
 
     arcs.select("path")
+      // .attr("d", arc);
       .transition()
       .duration(750)
       .delay(20)
@@ -292,7 +310,7 @@ function update(myplace) {
     arcs.select("path")
       .on("mouseover", mouseover);
 
-    var arctitles = arcs.select("title")
+    arcs.select("title")
         .text(function(d, i) {return d.value != 0 ? places[i] : "";});
 
 
@@ -403,11 +421,19 @@ function maprender() {
         .style("fill", function(d, i) {return Colors[i];})
         .attr("d", path)
         .on("click", function(d) {update(d.properties.NAME);})
-        .on("mouseover", function() {d3.select(this).style("stroke", "White").style("stroke-width", "2px");})
-        .on("mouseout", function() {d3.select(this).style("stroke", "Black").style("stroke-width", ".5px");});
+        .on("mouseover", function() {
+          d3.select(this)
+            .style("stroke", "White")
+            .style("stroke-width", "2px");
+          })
+        .on("mouseout", function() {
+          d3.select(this)
+          .style("stroke", "Black")
+          .style("stroke-width", ".5px");
+        });
 
-    var okrugstitle = okrugsmap.append("title")
-        .text(function(d) {return d.properties.NAME;});
+    okrugsmap.append("title")
+      .text(function(d) {return d.properties.NAME;});
 
     // okrugsmap.filter(function(d) {return d.properties.LVL == 8;}).remove();
   });
