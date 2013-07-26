@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-"
 import pandas as pd
 from collections import OrderedDict
-from json import dump
+# from json import dump
 
 # Настройка отображения
 pd.set_option('max_columns', 20)
@@ -39,47 +39,10 @@ def get_common_elements(dict1, dict2):
 	return sorted(set(list1).intersection(list2))
 
 
-def to_json(df, filename):
-    d = [
-    OrderedDict([
-    	(colname, row[i])
-    	for i,colname in enumerate(df.columns)
-    	])
-    for row in df.values
-    ]
-    return dump(d, open(filename + '.json', 'w'))
-
-
-
 df = pd.read_csv("/home/sergey/Dropbox/Coding/d3/ssuprunenko.github.io/data/ngpt-stations.csv",
 					sep=';', encoding='utf-8')
 
-# u"САО", u"СВАО",
 uniq_okrugs = [u"СВАО", u"ВАО", u"ЦАО", u"ЮВАО", u"ЮАО", u"ЮЗАО", u"ЗАО", u"СЗАО", u"САО"]
-
-# common_matrix = []
-# for okrug in uniq_okrugs:
-# 	df_okrug = df[df.OKRUG == okrug]
-# 	data = []
-# 	for district in df_okrug.UPRAVA.unique():
-# 		routes = ({'okrug': okrug, 'district':district,
-# 				 'routes':get_unique_elements(df[df.UPRAVA == district].ROUTES)})
-# 		data.append(routes)
-# 	data = pd.DataFrame(data, columns=['okrug', 'district', 'routes'])
-
-# 	local_matrix = []
-# 	for parent_district in data.district:
-# 		for district in data.district:
-# 			routes = len(get_common_elements(data[data.district == parent_district].routes,
-# 						 data[data.district == district].routes))
-# 			local_matrix.append(routes)
-# 		common_matrix.append({'okrug': okrug, 'district': parent_district,
-# 							 'routes': local_matrix})
-# 		local_matrix = []
-
-# common_matrix = pd.DataFrame(common_matrix, columns=['okrug', 'district', 'routes'])
-
-# to_json(common_matrix, 'matrix-districts')
 
 districts = (
 	{
@@ -136,6 +99,7 @@ districts = (
 			 (u"",0),(u"",0),(u"",0),(u"",0),(u"",0),(u"",0),(u"",0),(u"",0),(u"",0)]
 	})
 
+
 common_matrix = []
 data = []
 for okrug in uniq_okrugs:
@@ -146,8 +110,8 @@ for okrug in uniq_okrugs:
 		data.append(routes)
 
 data = pd.DataFrame(data, columns=['okrug', 'district', 'routes', 'metro'])
+data.to_json('../data/districts.json',orient='records',force_ascii=False)
 
-to_json(data, '../data/districts')
 
 for okrug in uniq_okrugs:
 	local_matrix = []
@@ -157,13 +121,12 @@ for okrug in uniq_okrugs:
 						 data[data.district == district].routes))
 			local_matrix.append(routes)
 		common_matrix.append({'okrug': okrug, 'district': parent_district,
-							 'routes': local_matrix,
-						  	   'metro': data[data.district == parent_district].metro.values[0]})
+							 'routes': local_matrix})
+						  	   # 'metro': data[data.district == parent_district].metro.values[0]})
 		local_matrix = []
 
-common_matrix = pd.DataFrame(common_matrix, columns=['okrug', 'district', 'routes', 'metro'])
-
-to_json(common_matrix, '../data/matrix')
+common_matrix = pd.DataFrame(common_matrix, columns=['okrug', 'district', 'routes'])
+common_matrix.to_json('../data/matrix.json',orient='records',force_ascii=False)
 
 
 uniq_okrugs = ([u"СВАО", u"ВАО", u"ЦАО", u"ЮВАО", u"ЮАО", u"ЮЗАО", u"ЗАО", u"СЗАО", u"САО",
@@ -185,5 +148,4 @@ for parent_okrug in data_okr.okrug:
 	local_matrix = []
 
 common_matrix_okr = pd.DataFrame(common_matrix_okr, columns=['okrug', 'routes'])
-
-to_json(common_matrix_okr, '../data/okrugs')
+common_matrix_okr.to_json('../data/okrugs.json',orient='records',force_ascii=False)
