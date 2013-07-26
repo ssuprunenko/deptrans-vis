@@ -32,15 +32,14 @@ var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf",
               "#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
 
 var okrugs = {0: "СВАО", 1: "ВАО", 2: "ЦАО", 3: "ЮВАО", 4: "ЮАО", 5: "ЮЗАО",
-              6: "ЗАО", 7: "СЗАО", 8: "САО"};
-             // 17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: "", 17: ""};
-
-var msk_colors = {0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 17:17};
+              6: "ЗАО", 7: "СЗАО", 8: "САО",
+             9: "", 10: "", 11: "", 12: "", 13: "", 14: "", 15: "", 16: ""};
 
 var file;
 d3.json("data/matrix.json", function(myfile) {
   file = myfile;
 });
+
 
 var data = [
   [156, 8, 31, 2, 0, 0, 0, 0, 29, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -62,6 +61,27 @@ var data = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
+
+var null_data = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+
 var last_chord = {},
     last_place;
 
@@ -71,13 +91,18 @@ var mypadding = 0.075;
 
 var width = 760,
     height = 600,
-    outerRadius = Math.min(width, height) * .38,
-    innerRadius = outerRadius * .91,
+    outerRadius = Math.min(width, height) * .37,
+    innerRadius = outerRadius * .935,
     northAngle = 10  * Math.PI / 180;
 
 var endAngle = 2*Math.PI - mypadding;
 var arc = d3.svg.arc()
     .startAngle(function(d) {
+      if (isNaN(d.endAngle)) {
+        d.value = 0;
+        d.endAngle = 0;
+        d.startAngle = 0;
+      };
       return d.startAngle < endAngle ? d.startAngle:endAngle;
     })
     .endAngle(function(d) {
@@ -105,6 +130,7 @@ maprender();
 
 var title = d3.select("#title")
       .text("Москва");
+var district_title;
 
 var arcs,
     chordlines,
@@ -112,6 +138,7 @@ var arcs,
     textcircle;
 
 render("Москва");
+update("Москва");
 
 
 /* Buttons */
@@ -149,32 +176,65 @@ d3.select("#clear").on("click", function() {
 function render(myplace) {
   title.text(myplace);
 
-  svg.select(".chord")
-    .remove();
+  var matrix = null_data;
 
-  svg.select(".arc")
-    .remove();
+  // Compute the chord layout
+  var layout = d3.layout.chord()
+    .matrix(matrix);
 
-  svg.select(".label")
-    .remove();
+  arcs = svg.append("svg:g")
+    .attr("class", "arc")
+    .selectAll("g")
+    .data(layout.groups)
+  .enter().append("svg:g")
+    .attr("id", function(d, i) {return "arc" + i;});
 
-  // d3.json("data/matrix.json", function(file) {
+  arcs.append("svg:path")
+    .on("mouseover", mouseover)
+    .style("fill", function(d, i) {return Colors[i];})
+    // .style("stroke", function(d, i) {return d.value != 0 ? Colors[i]:"none";})
+    // .attr("visibility", function(d) {return d.value == 0 ? "hidden": "visible";})
+    .attr("d", arc);
+
+  // Add the chords
+  chordlines = svg.append("svg:g")
+    .attr("class", "chord");
+
+  textcircle = svg.append("svg:circle")
+    .attr("class", "circle");
+
+  last_chord = layout;
+  last_place = 0;
+};
+
+
+function mouseover(d, i) {
+    chordlines.classed("fade", function(p) {
+      return p.source.index != i
+          && p.target.index != i;
+    });
+};
+
+function update(myplace) {
+
+  if (last_place != myplace) {
+
     var places = {},
-        // lines = {},
-        matrix = [],
-        n = 0;
+      matrix = [],
+      n = 0;
 
     if (myplace === "Москва") {
+      title.text(myplace).on("click", function() {update(myplace);});
       matrix = data;
       places = okrugs;
-      // lines = msk_colors;
     }
     else {
+      title.text("");
+      district_title = title.append("text").text("Москва/" + myplace);
       file.forEach(function(d) {
         if (d.okrug === myplace) {
           matrix.push(d.routes);
           places[n] = d.district;
-          // lines[n] = d.metro;
           n++;
         }
       });
@@ -187,106 +247,6 @@ function render(myplace) {
       // .sortChords(d3.ascending)
       .matrix(matrix);
 
-    arcs = svg.append("svg:g")
-      .attr("class", "arc")
-      .selectAll("g")
-      .data(layout.groups)
-    .enter().append("svg:g")
-      .attr("id", function(d, i) {return "arc" + i;});
-
-    arcs.append("svg:path")
-      .on("mouseover", mouseover)
-      .style("fill", function(d, i) {return Colors[i];})
-      // .style("stroke", function(d, i) {return d.value != 0 ? Colors[i]:"none";})
-      // .attr("visibility", function(d) {return d.value == 0 ? "hidden": "visible";})
-      .attr("d", arc);
-
-    // arcs.filter(function(d, i) {
-    //   return d.value == 0;
-    // })
-    // .attr("visibility", "hidden");
-
-    arcs.append("title")
-      .text(function(d, i) {return d.value != 0 ? places[i] : "";});
-
-    arcs.append("svg:text")
-      .attr("class", "label")
-      .attr("transform", function(d) {
-          var c = arc.centroid(d),
-              x = c[0],
-              y = c[1],
-              // pythagorean theorem for hypotenuse
-              h = Math.sqrt(x*x + y*y);
-          return "translate(" + (x/h * (outerRadius + 10)) +  ',' +
-             (y/h * (outerRadius + 10)) +  ")";
-      })
-      .attr("dy", ".35em")
-      .attr("text-anchor", function(d) {
-          return (d.endAngle + d.startAngle)/2 > Math.PI ?
-              "end" : "start";
-      })
-      .text(function(d, i) {return d.value != 0 ? places[i] : "";});
-
-    // Add the chords
-    chordlines = svg.append("svg:g")
-      .attr("class", "chord")
-      .selectAll("path")
-      .data(layout.chords)
-    .enter().append("svg:path")
-      .attr("id", function(d, i) {return "chord" + i;})
-      .style("fill", function(d) {return Colors[d.source.index];})
-      .attr("d", chordl);
-
-    // Add an elaborate mouseover title for each chord.
-    chordlines.append("title").text(function(d) {
-      return places[d.source.index]
-        + " ↔ " + places[d.target.index]
-        + ": " + d.source.value;
-    });
-
-    textcircle = svg.append("svg:circle")
-      .attr("class", "circle")
-      .attr("r", innerRadius);
-
-    last_chord = layout;
-    last_place = myplace;
-  // });
-};
-
-
-function mouseover(d, i) {
-    chordlines.classed("fade", function(p) {
-      return p.source.index != i
-          && p.target.index != i;
-    });
-};
-
-function update(myplace) {
-  title.text(myplace);
-
-  // d3.json("data/matrix.json", function(file) {
-  var places = {},
-      // lines = {},
-      matrix = [],
-      n = 0;
-
-  file.forEach(function(d) {
-    if (d.okrug === myplace) {
-      matrix.push(d.routes);
-      places[n] = d.district;
-      // lines[n] = d.metro;
-      n++;
-    }
-  });
-
-  // Compute the chord layout
-  var layout = d3.layout.chord()
-    .padding(mypadding)
-    .sortSubgroups(d3.descending)
-    // .sortChords(d3.ascending)
-    .matrix(matrix);
-
-  if (last_place != myplace) {
     svg.select(".chord")
     .remove();
 
@@ -303,8 +263,8 @@ function update(myplace) {
     arcs.select("path")
       // .attr("d", arc);
       .transition()
-      .duration(750)
-      .delay(20)
+      .duration(1000)
+      .delay(0)
       .attrTween("d", arcTween(last_chord));
 
     arcs.select("path")
@@ -317,14 +277,20 @@ function update(myplace) {
     // update labels
     labels = arcs.append("svg:text")
       .attr("class", "label")
-      .attr("transform", function(d) {
-          var c = arc.centroid(d),
-              x = c[0],
-              y = c[1],
-              // pythagorean theorem for hypotenuse
-              h = Math.sqrt(x*x + y*y);
+      .attr("transform", function(d,i) {
+        var c = arc.centroid(d),
+            x = c[0],
+            y = c[1],
+            // pythagorean theorem for hypotenuse
+            h = Math.sqrt(x*x + y*y);
+        if (places[i].split(' ').length === 1) {
           return "translate(" + (x/h * (outerRadius + 10)) +  ',' +
-             (y/h * (outerRadius + 17)) +  ")";
+            (y/h * (outerRadius + 15)) +  ")";
+        }
+        else {
+          return "translate(" + (x/h * (outerRadius + 10)) +  ',' +
+            (y/h * (outerRadius + 20)) +  ")";
+        }
       })
       .attr("text-anchor", function(d) {
           return (d.endAngle + d.startAngle)/2 > Math.PI ?
@@ -332,12 +298,14 @@ function update(myplace) {
       });
 
     labels.text(function(d, i) {
-        if (d.value != 0) {
-          var name = places[i].split(' ');
-          return name[0];
-          }
-        else return "";
-      });
+      if (d.value != 0) {
+        var name = places[i].split(' ');
+        return name[0];
+        }
+      else return "";
+      })
+      .style("stroke", "#272822")
+      .style("fill-opacity", ".2");
 
     labels.append('tspan')
       .text(function(d, i) {
@@ -350,7 +318,23 @@ function update(myplace) {
         else return "";
       })
       .attr('x', '0em')
-      .attr('y', '1.1em');
+      .attr('y', '1.1em')
+      .style("stroke", "#272822")
+      .style("fill-opacity", ".2");
+
+    labels
+      .transition()
+      .delay(100)
+      .duration(1000)
+      .style("stroke", "#f9e8d6")
+      .style("fill-opacity", "1");
+
+    labels.select('tspan')
+      .transition()
+      .delay(100)
+      .duration(1000)
+      .style("stroke", "#f9e8d6")
+      .style("fill-opacity", "1");
 
 
     // update chords
@@ -363,13 +347,13 @@ function update(myplace) {
       .style("fill", function(d) {return Colors[d.source.index];})
       .attr("d", chordl);
 
-    // chordlines
-    //   .style("fill-opacity", ".3")
-    //   .transition()
-    //   .delay(50)
-    //   .duration(400)
-    //   .attr("d", chordl)
-    //   .style("fill-opacity", ".8");
+    chordlines
+      .style("fill-opacity", ".1")
+      .transition()
+      .delay(100)
+      .duration(1000)
+      .attr("d", chordl)
+      .style("fill-opacity", ".8");
 
     // Add an elaborate mouseover title for each chord.
     chordlines.append("title").text(function(d) {
@@ -428,8 +412,8 @@ function maprender() {
           })
         .on("mouseout", function() {
           d3.select(this)
-          .style("stroke", "Black")
-          .style("stroke-width", ".5px");
+          .style("stroke", "#272822")
+          .style("stroke-width", "1px");
         });
 
     okrugsmap.append("title")
@@ -458,3 +442,4 @@ function chordTween(chord) {
     }
   }
 }
+
