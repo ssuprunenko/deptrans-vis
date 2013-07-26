@@ -230,7 +230,7 @@ function update(myplace) {
     }
     else {
       title.text("");
-      district_title = title.append("text").text("Москва/" + myplace);
+      district_title = title.append("text").text("Москва / " + myplace);
       file.forEach(function(d) {
         if (d.okrug === myplace) {
           matrix.push(d.routes);
@@ -263,7 +263,7 @@ function update(myplace) {
     arcs.select("path")
       // .attr("d", arc);
       .transition()
-      .duration(1000)
+      .duration(850)
       .delay(0)
       .attrTween("d", arcTween(last_chord));
 

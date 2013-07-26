@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>Общественный транспорт Москвы</title>
+<style>
+  body {
+    background: #f9e8d6;
+    background: #272822 url('img/paper.png');
+    background: #272822;
+    color: #f9e8d6;
+    font: 12px sans-serif;
+    margin: 2em auto 4em auto;
+    /*position: relative;*/
+  }
+
+/*  body > p, li > p {
+    line-height: 1.5em;
+  }*/
+
+  body > div {
+/*    width: 720px;
+    height: 720px;*/
+    /*margin: 20px;*/
+    /*float: left;*/
+  }
+
+  button {
+    padding: 10px;
+  }
+
+/*  svg {
+    font: 12px sans-serif;
+  }*/
+
+  #vis {
+    width: 1024px;
+    height: 640px;
+    margin: 0 auto;
+  }
+
+  #title {
+    font: 18px sans-serif;
+    font-weight: bold;
+  }
+
+  #chart {
+    width: 750px;
+    height: 600px;
+    margin: 0 auto;
+    overflow: visible;
+  }
+
+  #map {
+    width: 270px;
+    height: 300px;
+    /*margin-right: 0 auto;*/
+    /*margin-left: 10px;*/
+    z-index: 100;
+  }
+
+  #controls {
+    margin: 15px;
+    margin-top: 100px;
+    /*width: 200px;*/
+    /*height: 200px;*/
+    text-align: center;
+  }
+
+  #chart chart {
+    pointer-events: all;
+  }
+
+  .circle {
+    stroke: #272822;
+    stroke-width: 5px;
+    fill: none;
+  }
+
+
+  .okrug {
+    stroke: #272822;
+    stroke-width: 1px;
+    fill-opacity: .9;
+  }
+
+  .arc {
+    fill-opacity: 1;
+    /*stroke: #f9e8d6;*/
+    /*stroke-width: .5px;*/
+  }
+
+  .chord {
+    fill-opacity: .8;
+    /*stroke: #f9e8d6;*/
+    /*stroke-width: .25px;*/
+  }
+
+  .label {
+    font: 14px Verdana, Helvetica, sans-serif;
+    fill: #f9e8d6;
+    stroke: #f9e8d6;
+    stroke-width: .15px;
+  }
+
+  #chart:hover .fade {
+    opacity: .1;
+  }
+
+</style>
+</head>
+<body>
+  <div id="vis">
+    <div id="map" style="float:left"></div>
+    <div id="chart" style="float:left">
+      <h1 id="title" align="center">Москва</h1>
+    </div>
+  </div>
+  <script type="text/javascript" src="js/libs/lib.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/vis.min.js" charset="utf-8"></script>
+  <!--script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script-->
+</body>
+</html>
