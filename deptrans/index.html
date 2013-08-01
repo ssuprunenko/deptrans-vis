@@ -5,10 +5,11 @@
 <title>Общественный транспорт Москвы</title>
 <style>
   body {
-    background: #f9e8d6;
-    background: #272822 url('img/paper.png');
-    background: #272822;
-    color: #f9e8d6;
+    /*background: #f9e8d6;*/
+    /*background: #272822 url('img/paper.png');*/
+    /*background: #F3E0BD;*/
+    background: #ecf0f1;
+    color: #000;
     font: 12px sans-serif;
     margin: 2em auto 4em auto;
     /*position: relative;*/
@@ -72,35 +73,35 @@
   }
 
   .circle {
-    stroke: #272822;
+    stroke: #ecf0f1;
     stroke-width: 5px;
     fill: none;
   }
 
 
   .okrug {
-    stroke: #272822;
+    stroke: #ecf0f1;
     stroke-width: 1px;
-    fill-opacity: .9;
+    /*fill-opacity: .9;*/
   }
 
   .arc {
     fill-opacity: 1;
-    /*stroke: #f9e8d6;*/
+    /*stroke: #333333;*/
     /*stroke-width: .5px;*/
   }
 
   .chord {
     fill-opacity: .8;
-    /*stroke: #f9e8d6;*/
+    /*stroke: #333;*/
     /*stroke-width: .25px;*/
   }
 
   .label {
-    font: 14px Verdana, Helvetica, sans-serif;
-    fill: #f9e8d6;
-    stroke: #f9e8d6;
-    stroke-width: .15px;
+    font: 14px Verdana, sans-serif;
+    fill: #000;
+    stroke: #000;
+    stroke-width: .2px;
   }
 
   #chart:hover .fade {
@@ -117,7 +118,7 @@
     </div>
   </div>
   <script type="text/javascript" src="js/libs/lib.js" charset="utf-8"></script>
-  <script type="text/javascript" src="js/vis.min.js" charset="utf-8"></script>
+  <script type="text/javascript" src="js/vis.js" charset="utf-8"></script>
   <!--script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script-->
 </body>
 </html>

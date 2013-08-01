@@ -31,9 +31,20 @@ var Colors = ["#9e0142","#d53e4f","#f46d43","#fdae61","#fee08b","#ffffbf",
               "#e6f598","#abdda4","#66c2a5","#3288bd","#5e4fa2",
               "#762a83","#af8dc3","#e7d4e8","#d9f0d3","#7fbf7b","#1b7837"];
 
+
+// Flat UI colors
+var Colors = ["#c0392b", "#e74c3c", "#d35400", "#e67e22",
+              "#f39c12", "#2ecc71", "#27ae60", "#16a085",
+              "#00c0e4", "#3498db", "#2980b9", "#7658f8",
+              "#9b59b6", "#8e44ad", "#34495e", "#2c3e50",
+              "#000"];
+
 var okrugs = {0: "СВАО", 1: "ВАО", 2: "ЦАО", 3: "ЮВАО", 4: "ЮАО", 5: "ЮЗАО",
               6: "ЗАО", 7: "СЗАО", 8: "САО",
              9: "", 10: "", 11: "", 12: "", 13: "", 14: "", 15: "", 16: ""};
+
+var foreground = "#000",
+    background = "#ecf0f1";
 
 var file;
 d3.json("data/matrix.json", function(myfile) {
@@ -92,7 +103,7 @@ var mypadding = 0.075;
 var width = 760,
     height = 600,
     outerRadius = Math.min(width, height) * .37,
-    innerRadius = outerRadius * .935,
+    innerRadius = outerRadius * .9,
     northAngle = 10  * Math.PI / 180;
 
 var endAngle = 2*Math.PI - mypadding;
@@ -193,7 +204,7 @@ function render(myplace) {
     .on("mouseover", mouseover)
     .style("fill", function(d, i) {return Colors[i];})
     // .style("stroke", function(d, i) {return d.value != 0 ? Colors[i]:"none";})
-    // .attr("visibility", function(d) {return d.value == 0 ? "hidden": "visible";})
+    .attr("visibility", function(d) {return d.value == 0 ? "hidden": "visible";})
     .attr("d", arc);
 
   // Add the chords
@@ -253,6 +264,9 @@ function update(myplace) {
     arcs.select("text")
       .remove();
 
+    arcs.select("title")
+      .remove();
+
     textcircle.remove();
 
     // update arcs
@@ -263,14 +277,15 @@ function update(myplace) {
     arcs.select("path")
       // .attr("d", arc);
       .transition()
-      .duration(850)
-      .delay(0)
+      .duration(2000)
+      // .delay(0)
+      .ease('elastic', 1, 1)
       .attrTween("d", arcTween(last_chord));
 
     arcs.select("path")
       .on("mouseover", mouseover);
 
-    arcs.select("title")
+    arcs.append("title")
         .text(function(d, i) {return d.value != 0 ? places[i] : "";});
 
 
@@ -304,7 +319,7 @@ function update(myplace) {
         }
       else return "";
       })
-      .style("stroke", "#272822")
+      .style("stroke", background)
       .style("fill-opacity", ".2");
 
     labels.append('tspan')
@@ -319,21 +334,21 @@ function update(myplace) {
       })
       .attr('x', '0em')
       .attr('y', '1.1em')
-      .style("stroke", "#272822")
+      .style("stroke", background)
       .style("fill-opacity", ".2");
 
     labels
-      .transition()
-      .delay(100)
-      .duration(1000)
-      .style("stroke", "#f9e8d6")
+      // .transition()
+      // // .delay(100)
+      // .duration(500)
+      .style("stroke", foreground)
       .style("fill-opacity", "1");
 
     labels.select('tspan')
-      .transition()
-      .delay(100)
-      .duration(1000)
-      .style("stroke", "#f9e8d6")
+      // .transition()
+      // // .delay(100)
+      // .duration(500)
+      .style("stroke", foreground)
       .style("fill-opacity", "1");
 
 
@@ -345,6 +360,7 @@ function update(myplace) {
     .enter().append("svg:path")
       .attr("id", function(d, i) {return "chord" + i;})
       .style("fill", function(d) {return Colors[d.source.index];})
+      // .style("stroke", function(d, i) {return d.value != 0 ? Colors[i]:background;})
       .attr("d", chordl);
 
     chordlines
@@ -412,7 +428,7 @@ function maprender() {
           })
         .on("mouseout", function() {
           d3.select(this)
-          .style("stroke", "#272822")
+          .style("stroke", background)
           .style("stroke-width", "1px");
         });
 
