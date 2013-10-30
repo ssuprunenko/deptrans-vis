@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <title>Общественный транспорт Москвы</title>
+<!-- <link href='http://fonts.googleapis.com/css?family=Ubuntu:500|Roboto:500&subset=latin,cyrillic' rel='stylesheet' type='text/css'> -->
 <style>
   body {
     /*background: #f9e8d6;*/
@@ -10,7 +11,9 @@
     /*background: #F3E0BD;*/
     background: #ecf0f1;
     color: #000;
-    font: 12px sans-serif;
+    font-size: 14px;
+    font-family:  Verdana, sans-serif;
+    /*font-family: Verdana, sans-serif;*/
     margin: 2em auto 4em auto;
     /*position: relative;*/
   }
@@ -41,8 +44,8 @@
   }
 
   #title {
-    font: 18px sans-serif;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 700;
   }
 
   #chart {
@@ -80,9 +83,15 @@
 
 
   .okrug {
-    stroke: #ecf0f1;
+    fill: #bdc3c7;
+    stroke: #7f8c8d;
     stroke-width: 1px;
     /*fill-opacity: .9;*/
+  }
+
+  .okrug.active {
+    fill: #7F8C8D;
+    stroke: #bdc3c7;
   }
 
   .arc {
@@ -98,10 +107,11 @@
   }
 
   .label {
-    font: 14px Verdana, sans-serif;
-    fill: #000;
-    stroke: #000;
-    stroke-width: .2px;
+    font-weight: 500;
+    /*font: 12px;*/
+    /*fill: #000;*/
+/*    stroke: #000;
+    stroke-width: .2px;*/
   }
 
   #chart:hover .fade {
@@ -119,6 +129,6 @@
   </div>
   <script type="text/javascript" src="js/libs/lib.js" charset="utf-8"></script>
   <script type="text/javascript" src="js/vis.js" charset="utf-8"></script>
-  <!--script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script-->
+  <!-- script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script -->
 </body>
 </html>

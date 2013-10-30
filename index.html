@@ -4,17 +4,17 @@
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 <title>Sergey Suprunenko GitHub page</title>
 <style>
+  html, body {
+    font-size: 100%;
+  }
   body {
-    background: #f9e8d6;
-    background: #272822 url('img/paper.png');
-    background: #f9e8d6;
-    color: #f9e8d6;
-    font: 16px sans-serif;
-    margin: 2em auto 4em auto;
-    /*position: relative;*/
+    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
   }
 
-  body > a, li > p {
+  body > a, li {
     line-height: 1.5em;
   }
 
@@ -26,14 +26,31 @@
     width: 800px;
     height: 640px;
     margin: 0 auto;
+    margin-top: 20px;
   }
+
+  #deptrans li {
+    /*display: block;*/
+  }
+
+  #deptrans a {
+    color: #222;
+    font-weight: bold;
+  }
+
+  #deptrans a:hover {
+    color: #28bfa4;
+  }
+
+
 
 </style>
 </head>
 <body>
-  <div id="deptrans">
-      <h1><a href="deptrans/index.html">Общественный транспорт Москвы</a></h1>
-  </div>
+  <ul id="deptrans">
+      <li><a href="deptrans/index.html">Deptrans</a></li>
+      <li><a href="burpee">Burpee</a></li>
+  </ul>
   <!--script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script-->
 </body>
 </html>
